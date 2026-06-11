@@ -25,9 +25,7 @@ The **Live Documentation Assistant & Chat Engine** is a sophisticated AI-powered
 
 ## 🎬 Demo
 
-<p align="center">
-  <video src="https://github.com/user-attachments/assets/0da7d33c-c8e0-41cf-af5a-6fb71872999f" width="100%" controls muted></video>
-</p>
+https://github.com/user-attachments/assets/f25e1ca2-f761-441f-8b53-f2f1001498d7
 
 *Interactive dashboard interface showing the Chat Engine fetching and blending data streams concurrently.*
 
