@@ -26,7 +26,9 @@ The **Live Documentation Assistant & Chat Engine** is a sophisticated AI-powered
 
 ## 🎬 Demo
 
-https://github.com/user-attachments/assets/20260611-0913-38.5048365.mp4
+<div align="center">
+  <video src="public/demo.mp4" width="100%" controls muted></video>
+</div>
 *Interactive dashboard interface showing the Chat Engine fetching and blending data streams concurrently.*
 
 ---
@@ -42,6 +44,67 @@ https://github.com/user-attachments/assets/20260611-0913-38.5048365.mp4
 | 🤖 **Core Engine LLM** | Gemini 2.5 Flash | Fast model deployment with low temperature limits |
 | 🧬 **Embeddings** | gemini-embedding-2-preview | Generates deep multidimensional vector paths |
 | 🐍 **Backend Runtime** | Python 3.11 + `uv` toolchain | Isolated dependency builds and deterministic environment locking |
+
+---
+
+## 🚀 System Architecture
+
+The **Live Documentation Assistant & Chat Engine** is built using a decoupled, parallelized asymmetric RAG framework. Instead of a linear retrieval loop, it forks incoming user queries into two separate asynchronous processing tracks to capture both static local parameters and volatile live internet changes.
+
+### 🏛️ Architecture Blueprint & Flow
+
+                 +---------------------------------------+
+                 |         Streamlit Front-End           |
+                 |  (User inputs question / greeting)    |
+                 +-------------------+-------------------+
+                                     |
+                                     v
+                 +-------------------+-------------------+
+                 |      LangChain Expression Language    |
+                 |         (LCEL Pipeline Router)        |
+                 +------------+---------------+----------+
+                              |               |
+     [ Track A: Local Memory ]|               |[ Track B: Live Internet ]
+                              |               |
+                              v               v
+       +----------------------+------+ +------+----------------------+
+       |  gemini-embedding-2-preview | |  DuckDuckGo Search Engine   |
+       +--------------+--------------+ +--------------+--------------+
+                      |                              |
+                      v                              v
+       +--------------+--------------+ +--------------+--------------+
+       |     ChromaDB Vector Store   | |    Real-Time Web Scraped     |
+       |     (Dense Context K=2)     | |      Context / Snippets      |
+       +--------------+--------------+ +--------------+--------------+
+                      |                              |
+                      +---------------+--------------+
+                                      |
+                                      v  [Merged Context Payloads]
+                 +--------------------+------------------+
+                 |       System Prompt Engineering       |
+                 |    (Routing & Grounding Constraints)  |
+                 +--------------------+------------------+
+                                      |
+                                      v
+                 +--------------------+------------------+
+                 |         Gemini 2.5 Flash LLM          |
+                 |  (Low Latency / Stable Synthesis)     |
+                 +--------------------+------------------+
+                                      |
+                                      v
+                 +--------------------+------------------+
+                 |    Streamed Output to UI Dashboard    |
+                 |      =====> Piped to LangSmith Trace  |
+                 +---------------------------------------+
+
+### 🔁 Step-by-Step Pipeline Execution
+
+1. **Intelligent Query Routing:** The text from the Streamlit entry bar hits the LCEL execution engine. If the prompt is a simple greeting (`"hello"`), the router bypasses deep vector/web retrieval loops entirely to issue an instant contextual welcome statement, preventing "over-grounding".
+2. **Asynchronous Forking:** When a technical query is detected, LangChain forks the execution tree into a `RunnableParallel` block:
+   * **Vector Search:** Converts the text into mathematical arrays via `gemini-embedding-2-preview` and queries your local `chroma_db` folder for the top 2 closest matching text chunks.
+   * **Live Exploration:** Simultaneously spins up a DuckDuckGo worker instance to capture the latest information published on the open web.
+3. **Synthesis & Evaluation:** Both data streams are joined and compiled into a structured system template. **Gemini 2.5 Flash** processes the consolidated payload at a low temperature setting (`0.1`) to filter out hallucinations and output an objective technical report.
+4. **Telemetry Export:** The response streams cleanly back onto your dashboard page while the full processing tree, latency delays, and token metadata metrics are sent asynchronously to **LangSmith** for live observability tracking.
 
 ---
 
@@ -62,31 +125,35 @@ https://github.com/user-attachments/assets/20260611-0913-38.5048365.mp4
 
 2. **Initialize your dependencies using uv**
 
-   # Pin local session execution target runtime
-   uv python pin 3.11
-
-   # Synchronize environment libraries and package states
-   uv sync
+   ```bash
+   uv python pin 3.11 #(Pin local session execution target runtime)
+   uv sync # (Synchronize environment libraries and package states)
 
 3. **Establish your local .env setup mapping parameters**
    Create a .env file right inside your root project folder layout:
 
-   # Core Gemini Engine
-   GOOGLE_API_KEY="YOUR_GOOGLE_AI_STUDIO_TOKEN"
+   ```bash
+    # (Core Gemini Engine)
+   GOOGLE_API_KEY="YOUR_GOOGLE_AI_STUDIO_TOKEN"  
 
-   # Standardized LangSmith Production Telemetry
+   # (Standardized LangSmith Production Telemetry)
    LANGCHAIN_TRACING_V2="true"
    LANGCHAIN_API_KEY="YOUR_LANGSMITH_LSV2_KEY_HERE"
    LANGCHAIN_PROJECT="doc-helper-project"
 
 4. **Populate your local vector memory cache**
+
    Add your technical notes or updates to sample_docs.txt, then run the ingestion pipeline script:
 
+   ```bash
    uv run python ingestion.py
 
 5. **Fire up the web chat platform workspace**
+    
+    Navigate your desktop web browser path over to http://localhost:8501 to view your live assistant framework.
+
+   ```bash
    uv run streamlit run app.py
-   Navigate your desktop web browser path over to http://localhost:8501 to view your live assistant framework.
 
 ## 🔧 Windows Troubleshooting Note
    If your Windows terminal session flags an explicit descriptor compilation error message sequence:
