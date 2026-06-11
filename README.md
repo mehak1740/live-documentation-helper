@@ -26,70 +26,53 @@ A production-ready, zero-storage **Retrieval-Augmented Generation (RAG)** web ap
 ---
 
 ## 🧬 Architectural Data Flow
-[ User Query ]
-│
-▼
-┌──────────────┐
-│  Streamlit   │ ──► Triggers Reactive Spinner / Session State Capture
-└──────────────┘
-│
-▼
-┌──────────────┐
-│  LangChain   │ ──► Maps inputs using RunnablePassthrough
-└──────────────┘
-│
-├──────────────────────────────┐
-▼                              ▼
-┌──────────────┐              ┌──────────────┐
-│ DuckDuckGo   │              │ Raw Question │
-│ Search Tool  │              └──────────────┘
-└──────────────┘                     │
-│ (Fetches snippets)           │
-▼                              ▼
-┌────────────────────────────────────────────┐
-│            ChatPromptTemplate              │ ──► Strict grounding instructions inject context
-└────────────────────────────────────────────┘
-│
-▼
-┌────────────────────────────────────────────┐
-│        Gemini 2.5 Flash Inference          │
-└────────────────────────────────────────────┘
-│
-▼
-┌────────────────────────────────────────────┐
-│             StrOutputParser                │
-└────────────────────────────────────────────┘
-│
-▼
-[ Polished Markdown Web Bubble UI ]
+## 🧬 Architectural Data Flow
 
+```mermaid
+graph TD
+    A[👤 User Input Query] --> B[🎨 Streamlit UI]
+    B -->|Captures Session State| C[🔗 LangChain LCEL Pipeline]
+    
+    C --> D{RunnablePassthrough}
+    D -->|Step 1: Execute Search| E[🦆 DuckDuckGo Search Engine]
+    D -->|Step 2: Forward Raw Input| F[📝 Original Question]
+    
+    E -->|Inject Collected Web Snippets| G[⚙️ ChatPromptTemplate System]
+    F -->|Inject Context Grounding Rules| G
+    
+    G --> H[🧠 Gemini 2.5 Flash Model]
+    H -->|Generate Response| I[🧩 StrOutputParser]
+    I --> J[💬 Live Web Chat Bubble UI]
 
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#bbf,stroke:#333,stroke-width:2px
+    style H fill:#f96,stroke:#333,stroke-width:2px
+    style J fill:#bfb,stroke:#333,stroke-width:2px
 ---
 
-## 🚀 Installation & Local Deployment
+🚀 Installation & Local Deployment
+Follow these structured steps to set up and run the Live Documentation Assistant on your local machine.
 
-Follow these complete, isolated setup instructions to execute the workspace on your machine:
-
-### 1. Initialize and Navigate to Workspace
-```dos
+1. Workspace Isolation & Setup
+Open your terminal application and change directories into your project folder workspace:
 cd doc-helper-project
 
-2. Configure Environment Parameters
-Create a secure credentials file named .env in the root folder directory and attach your Google AI Studio API key:
-
+2. Environment Configuration
+Your environment requires a valid Google Gemini API key to interact with the underlying language models. Create a configuration file named .env directly within the root directory:
 GOOGLE_API_KEY="YOUR_ACTUAL_GEMINI_API_KEY"
-Note: The local .gitignore is pre-configured to ensure this token is completely isolated and protected from public version control leakage.
+⚠️ Security Warning: The repository includes a pre-configured .gitignore file. Ensure your .env file remains untracked to prevent leaking sensitive API credentials to public cloud version control managers.
 
-3. Deploy Local Package Bindings
-Execute standard explicit pre-compiled binary synchronization using the fast uv pip utility to guarantee a conflict-free assembly layer:
-
+3. Dependency Synchronization
+To guarantee a completely isolated and conflict-free execution layer on your machine, run the following optimized uv command. This uses pre-compiled binaries (wheels) to completely bypass local C++ compiler dependencies:
 uv pip install langchain-community langchain-google-genai duckduckgo-search python-dotenv ddgs streamlit --only-binary :all:
 
-4. Launch the Web Application Server
-Fire up the microservice orchestration module:
+4. Running the Web Application Core
+Launch the Streamlit microservice layer to host the system interface locally:
 
 uv run streamlit run app.py
-A reactive development browser port will instantly surface automatically at http://localhost:8501.
+
+Once initialized, the terminal window will display your local network addresses, and a clean, responsive development interface will automatically launch in your default web browser at:
+http://localhost:8501
 
 🎨 Interactive Preview Check
 The system features a structured chat loop history using native container tokens. It manages advanced data extraction pipelines safely:
@@ -99,7 +82,6 @@ Streamlined custom user icons tracking live responses.
 Active technical updates filtering (e.g., extracting precise LangChain 1.x release properties or custom subagent structures seamlessly from online developer forums).
 
 📜 Repository Structure
-Plaintext
 doc-helper-project/
 ├── .env                  # Authenticated secret infrastructure keys (git-ignored)
 ├── .gitignore            # Version control safety exclusion configurations
@@ -108,4 +90,3 @@ doc-helper-project/
 ├── pyproject.toml        # Declarative package dependencies metadata manifest
 ├── README.md             # Professional documentation summary interface
 └── uv.lock               # Deterministic locked environment version layout
-
