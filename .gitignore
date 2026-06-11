@@ -1,4 +1,16 @@
-.venv/
+# Environment Configuration Files (MUST remain untracked)
 .env
+
+# Virtual Environment Folders
+.venv/
+venv/
+ENV/
+
+# Python Cache & Compiled Files
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+
+# Local Database Stores
+chroma_db/

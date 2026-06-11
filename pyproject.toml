@@ -1,7 +1,20 @@
 [project]
 name = "doc-helper-project"
 version = "0.1.0"
-description = "Add your description here"
+description = "Hybrid RAG Documentation Assistant using ChromaDB, Live Web Search, and LangSmith Tracing"
 readme = "README.md"
-requires-python = ">=3.9"
-dependencies = []
+requires-python = ">=3.11"
+dependencies = [
+    "langchain>=0.3.0",
+    "langchain-community>=0.3.0",
+    "langchain-google-genai>=2.0.0",
+    "langchain-chroma>=0.2.0",
+    "duckduckgo-search>=6.0.0",
+    "python-dotenv>=1.0.0",
+    "streamlit>=1.35.0",
+    "ddgs>=9.14.4",
+]
+
+# This tells uv to ignore package building hooks entirely
+[tool.uv]
+package = false

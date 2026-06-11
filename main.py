@@ -1,30 +1,40 @@
 import os
+os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
 from langchain_community.tools import DuckDuckGoSearchRun
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_chroma import Chroma
+from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 from dotenv import load_dotenv
 
-# Load your Gemini API key from the local .env file
 load_dotenv()
 
+def format_docs(docs):
+    return "\n\n".join(doc.page_content for doc in docs)
+
 def main():
-    print("--- Initializing Live Web Search RAG Agent ---")
+    print("--- Initializing Hybrid (ChromaDB Vector Store + Live Search) RAG Agent ---")
 
-    # 1. Initialize the Free DuckDuckGo Search Engine Tool
+    # Fixed: Alignment config to text-embedding-004
+    embeddings = GoogleGenerativeAIEmbeddings(model="gemini-embedding-2-preview")
+    
+    if not os.path.exists("./chroma_db"):
+        print("⚠️ Warning: './chroma_db' folder not found. Please run 'uv run python ingestion.py' first!")
+        return
+
+    vector_store = Chroma(persist_directory="./chroma_db", embedding_function=embeddings)
+    db_retriever = vector_store.as_retriever(search_kwargs={"k": 2})
+
     search_tool = DuckDuckGoSearchRun()
-
-    # 2. Connect to the free Gemini cloud intelligence
     llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.1)
 
-    # 3. Create an optimized prompt template for live data grounding
     system_prompt = (
-        "You are an advanced live technical documentation assistant.\n"
-        "Answer the user's question clearly using the live web search context provided below.\n"
-        "If the search context doesn't contain enough details, use your internal knowledge to give an accurate reply, "
-        "but mention that you are relying on general training data.\n\n"
-        "Live Web Context:\n{context}"
+        "You are an advanced engineering assistant operating with access to hybrid memory banks.\n"
+        "Synthesize an accurate response using BOTH database storage context and live web lookups.\n\n"
+        "📁 [Database Memory Context]:\n{db_context}\n\n"
+        "🌐 [Live Web Search Context]:\n{web_context}\n\n"
+        "If the information is missing from both banks, rely on your internal training knowledge but state it clearly."
     )
     
     prompt_template = ChatPromptTemplate.from_messages([
@@ -32,10 +42,10 @@ def main():
         ("human", "{question}"),
     ])
 
-    # 4. Construct the LCEL Live Search Chain
-    live_search_chain = (
+    hybrid_search_chain = (
         {
-            "context": RunnablePassthrough() | search_tool,
+            "db_context": db_retriever | format_docs,
+            "web_context": RunnablePassthrough() | search_tool,
             "question": RunnablePassthrough()
         }
         | prompt_template
@@ -43,14 +53,13 @@ def main():
         | StrOutputParser()
     )
 
-    # 5. Execute a live query!
-    user_query = "What are the latest updates or release features in LangChain in 2026?"
+    user_query = "What is LangSmith Fleet and what are the latest updates in LangChain in 2026?"
     print(f"\n[User Query]: {user_query}")
-    print("Searching the live internet via DuckDuckGo and compiling answers...\n")
+    print("Querying ChromaDB vector storage and searching live internet simultaneously...\n")
 
-    ai_response = live_search_chain.invoke(user_query)
+    ai_response = hybrid_search_chain.invoke(user_query)
 
-    print("--- Live Web Assistant Response ---")
+    print("--- Hybrid Assistant Response ---")
     print(ai_response)
 
 if __name__ == "__main__":
