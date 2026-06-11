@@ -25,9 +25,11 @@ The **Live Documentation Assistant & Chat Engine** is a sophisticated AI-powered
 
 ## 🎬 Demo
 
-<div align="center">
+[![Watch the Live Demo](https://img.shields.io/badge/▶_Watch_Project_Demo_Video-FF4B4B?style=for-the-badge&logo=googlechrome&logoColor=white)](public/demo.mp4)
+
+<p align="center">
   <video src="public/demo.mp4" width="100%" controls muted></video>
-</div>
+</p>
 
 *Interactive dashboard interface showing the Chat Engine fetching and blending data streams concurrently.*
 
@@ -156,9 +158,10 @@ The **Live Documentation Assistant & Chat Engine** is built using a decoupled, p
    uv run streamlit run app.py
 
 ## 🔧 Windows Troubleshooting Note
-   ** If your Windows terminal session flags an explicit descriptor compilation error message sequence:
-   TypeError: Descriptors cannot be created directly. ** 
 
+If your Windows terminal session flags an explicit descriptor compilation error message sequence:
+   ```bash
+   TypeError: Descriptors cannot be created directly.
    Force your terminal profile instance to utilize pure Python implementations before starting the Streamlit application server block:
    set PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
    uv run streamlit run app.py
