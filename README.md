@@ -6,7 +6,6 @@
 [![LangChain](https://img.shields.io/badge/LangChain-0.3%2B-green.svg)](https://langchain.com/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.35%2B-FF4B4B.svg)](https://streamlit.io/)
 [![ChromaDB](https://img.shields.io/badge/ChromaDB-v0.5%2B-orange.svg)](https://www.trychroma.com/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
 
@@ -29,6 +28,7 @@ The **Live Documentation Assistant & Chat Engine** is a sophisticated AI-powered
 <div align="center">
   <video src="public/demo.mp4" width="100%" controls muted></video>
 </div>
+
 *Interactive dashboard interface showing the Chat Engine fetching and blending data streams concurrently.*
 
 ---
@@ -156,12 +156,10 @@ The **Live Documentation Assistant & Chat Engine** is built using a decoupled, p
    uv run streamlit run app.py
 
 ## 🔧 Windows Troubleshooting Note
-   If your Windows terminal session flags an explicit descriptor compilation error message sequence:
-   TypeError: Descriptors cannot be created directly.
+   ** If your Windows terminal session flags an explicit descriptor compilation error message sequence:
+   TypeError: Descriptors cannot be created directly. ** 
 
    Force your terminal profile instance to utilize pure Python implementations before starting the Streamlit application server block:
    set PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
    uv run streamlit run app.py
 
-## 📄 License
-   This system environment is licensed under the terms of the MIT License agreement layout.
