@@ -25,11 +25,7 @@ The **Live Documentation Assistant & Chat Engine** is a sophisticated AI-powered
 
 ## 🎬 Demo
 
-[![Watch the Live Demo](https://img.shields.io/badge/▶_Watch_Project_Demo_Video-FF4B4B?style=for-the-badge&logo=googlechrome&logoColor=white)](public/demo.mp4)
-
-<p align="center">
-  <video src="public/demo.mp4" width="100%" controls muted></video>
-</p>
+https://github.com/user-attachments/assets/4b0c0090-dc23-451a-bcac-d17aa251781b
 
 *Interactive dashboard interface showing the Chat Engine fetching and blending data streams concurrently.*
 
